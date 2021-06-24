@@ -7,7 +7,7 @@ It has support for multiple languages! And great error feedback!
 
 ## Usage
 ```js
-import {validator} from 'https://cdn.jsdelivr.net/gh/marcodpt/validator/index.js'
+import {validate} from 'https://cdn.jsdelivr.net/gh/marcodpt/validator/index.js'
 
 const schema = {
   type: "object",
@@ -69,10 +69,10 @@ console.log(res)
 
 ## API
 The current available translations are:
- - `validator`: english
- - `validator_pt`: portuguese (português)
+ - `validate`: english
+ - `validate_pt`: portuguese (português)
 
-### validator (schema, data, onError)
+### validate (schema, data, onError)
  - object `schema`: A json schema of the data, it must be an object because
 the current implementation only support objects.
  - object `data`: Your data model
