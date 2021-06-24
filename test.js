@@ -16,14 +16,83 @@ const check = assert => (S, raw) => (Input, Result, Err, pt) => {
   assert.equal(
     str((pt ? validate_pt : validate)(
       raw ? S : genSchema(S), raw ? Input : {x: Input}, setErrors(E)
-    )), Err ? 'null' : raw ? Result : str({x: Result})
+    )), Err ? 'null' : raw ? str(Result) : str({x: Result})
   )
   assert.equal(str(E), str(Err ? raw ? Err : {x: [Err]} : {}))
 }
 
+QUnit.test("string", assert => {
+  const x = check(assert)
+  var c = x({
+    type: 'string'
+  })
+  c(undefined, '')
+  c(null, '')
+  c({}, '{}')
+  c([], '[]')
+  c(true, 'true')
+  c(false, 'false')
+  c(0, '0')
+  c(0.00, '0')
+  c(+5, '5')
+  c(-5, '-5')
+  c(3.14, '3.14')
+  c(-2.7, '-2.7')
+  c('', '')
+  c('14.54f', '14.54f')
+  c('14.54 f', '14.54 f')
+  c('dog', 'dog')
+})
+
+QUnit.test("integer", assert => {
+  const x = check(assert)
+  var c = x({
+    type: 'integer'
+  })
+  c(undefined, null)
+  c(null, null)
+  c({}, null)
+  c([], null)
+  c(true, null)
+  c(false, null)
+  c(0, 0)
+  c(0.00, 0)
+  c(+5, 5)
+  c(-5, -5)
+  c(3.14, 3)
+  c(-2.7, -2)
+  c('', null)
+  c('14.54f', null)
+  c('14.54 f', null)
+  c('dog', null)
+})
+
+QUnit.test("number", assert => {
+  const x = check(assert)
+  var c = x({
+    type: 'number'
+  })
+  c(undefined, null)
+  c(null, null)
+  c({}, null)
+  c([], null)
+  c(true, null)
+  c(false, null)
+  c(0, 0)
+  c(0.00, 0)
+  c(+5, 5)
+  c(-5, -5)
+  c(3.14, 3.14)
+  c(-2.7, -2.7)
+  c('', null)
+  c('14.54f', null)
+  c('14.54 f', null)
+  c('dog', null)
+})
+
 QUnit.test("required", assert => {
   const x = check(assert)
-  const c = x({
+  var c = x({
     properties: {
       foo: {
         type: "number"
@@ -34,12 +103,46 @@ QUnit.test("required", assert => {
     },
     required: ['foo']
   }, true)
-
   c({foo: 1}, {foo: 1, bar: ''})
   c({bar: "test"}, '', {foo: ['Is required!']})
   c({bar: "test"}, '', {foo: ['É obrigatório!']}, true)
   c({foo: "x"}, '', {foo: ['Is required!']})
   c({foo: "x"}, '', {foo: ['É obrigatório!']}, true)
+  c({foo: "3.14", baz: 3, qux: "xxx"}, {foo: 3.14, bar: ''})
+
+  var c = x({
+    properties: {
+      foo: {
+        type: "number"
+      },
+      bar: {
+        type: "string"
+      }
+    },
+    required: ['bar']
+  }, true)
+  c({foo: 1}, {foo: 1, bar: ''})
+  c({bar: "test"}, {foo: null, bar: "test"})
+  c({foo: "x"}, {foo: null, bar: ''})
+  c({foo: "3.14", baz: 3, qux: "xxx"}, {foo: 3.14, bar: ''})
+
+  var c = x({
+    properties: {
+      foo: {
+        type: "number"
+      },
+      bar: {
+        type: "string"
+      }
+    },
+    required: ['foo', 'bar']
+  }, true)
+  c({foo: 1}, {foo: 1, bar: ''})
+  c({bar: "test"}, '', {foo: ['Is required!']})
+  c({bar: "test"}, '', {foo: ['É obrigatório!']}, true)
+  c({foo: "x"}, '', {foo: ['Is required!']})
+  c({foo: "x"}, '', {foo: ['É obrigatório!']}, true)
+  c({foo: "3.14", baz: 3, qux: "xxx"}, {foo: 3.14, bar: ''})
 })
 
 QUnit.test("minimum", assert => {
@@ -376,11 +479,127 @@ QUnit.test("pattern", assert => {
   c(3.14, 3.14)
 })
 
-/*QUnit.test("date", assert => {
+QUnit.test("date", assert => {
   const x = check(assert)
-
+  const c = x({
+    type: 'integer',
+    format: 'date',
+    minimum: 1619454783,
+    maximum: 1623610905
+  })
+  const a = new Date('2021-04-26T10:00:00.000Z').toLocaleDateString()
+  const b = new Date('2021-06-13T10:00:00.000Z').toLocaleDateString()
+  c(0, null)
+  c('', null)
+  c('2021-04-08', '', 'Must be at least: '+a)
+  c('2021-06-17', '', 'Must be at most: '+b)
+  c('2021-06-01', 1622505600)
+  c('2021-06-02', 1622592000)
 })
 
 QUnit.test("mix", assert => {
+  const x = check(assert)
+  var c = x({
+    properties: {
+      foo: {
+        type: "integer",
+        minLength: 3,
+        maxLength: 10,
+        pattern: 'a+',
+        minimum: 7,
+        maximum: 19,
+        multipleOf: 1.5
+      },
+      bar: {
+        type: "number",
+        minLength: 3,
+        maxLength: 10,
+        pattern: 'a+',
+        minimum: 7,
+        maximum: 19,
+        multipleOf: 1.5
+      },
+      baz: {
+        type: "string",
+        minLength: 3,
+        maxLength: 10,
+        pattern: 'a+',
+        minimum: 7,
+        maximum: 19,
+        multipleOf: 1.5
+      }
+    },
+    required: ['foo', 'bar', 'baz']
+  }, true)
+  const v = (1.5).toLocaleString()
 
-})*/
+  c({
+    foo: 2,
+    baz: 'bb'
+  }, '', {
+    foo: [
+      'Must be at least: 7',
+      'Must be multiple of: '+v
+    ],
+    bar: ['Is required!'],
+    baz: [
+      'Must have at least 3 characters',
+      'Must be of specified type!'
+    ]
+  })
+  c({
+    foo: 2,
+    baz: 'bb'
+  }, '', {
+    foo: [
+      'Deve ser no mínimo: 7',
+      'Deve ser múltiplo de: '+v
+    ],
+    bar: ['É obrigatório!'],
+    baz: [
+      'Deve ter no mínimo 3 caracteres',
+      'Deve ser do tipo especificado!'
+    ]
+  }, true)
+  c({
+    foo: 13.5,
+    bar: 44.5,
+    baz: 'bbccccarrrrr'
+  }, '', {
+    foo: [
+      'Must be multiple of: '+v
+    ],
+    bar: [
+      'Must be at most: 19',
+      'Must be multiple of: '+v
+    ],
+    baz: [
+      'Must have at most 10 characters',
+    ]
+  })
+  c({
+    foo: 13.5,
+    bar: 44.5,
+    baz: 'bbccccarrrrr'
+  }, '', {
+    foo: [
+      'Deve ser múltiplo de: '+v
+    ],
+    bar: [
+      'Deve ser no máximo: 19',
+      'Deve ser múltiplo de: '+v
+    ],
+    baz: [
+      'Deve ter no máximo 10 caracteres'
+    ]
+  }, true)
+  c({
+    foo: 15,
+    bar: 13.5,
+    baz: 'cccarr'
+  }, {
+    foo: 15,
+    bar: 13.5,
+    baz: 'cccarr'
+  })
+})

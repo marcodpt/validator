@@ -1,13 +1,14 @@
 export default {
   string: {
-    parser: value => value == null ? '' : String(value)
+    parser: value => value == null ? '' : typeof value == 'object' ?
+      JSON.stringify(value, undefined, 2) : String(value)
   },
   integer: {
     parser: value => isNaN(value) ? null : parseInt(value),
     format: value => value.toLocaleString()
   },
   date: {
-    loader: value => new Date(value * 1000).toISOString(),
+    loader: value => new Date(value * 1000),
     parser: value => value ? parseInt(
       (new Date(value).getTime() / 1000).toFixed(0)
     ) : null,

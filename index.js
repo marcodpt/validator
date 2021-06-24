@@ -19,7 +19,7 @@ const validate = lng => (schema, data, onError) => {
     Object.keys(assert).forEach(key => {
       if (
         key == 'required' &&
-        (schema.required || []).indexOf(key) != -1 &&
+        (schema.required || []).indexOf(p) != -1 &&
         !assert.required(R[p])
       ) {
         onError && onError(p, L.required())
