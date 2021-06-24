@@ -13,5 +13,6 @@ export default {
     value.length <= fixed,
   pattern: (fixed, value) =>
     typeof value != 'string' ||
-    new RegExp(fixed).test(value)
+    new RegExp(fixed).test(value),
+  enum: (fixed, value) => fixed.indexOf(value) != -1
 }

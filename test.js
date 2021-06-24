@@ -497,6 +497,50 @@ QUnit.test("date", assert => {
   c('2021-06-02', 1622592000)
 })
 
+QUnit.test("enum", assert => {
+  const x = check(assert)
+  var c = x({
+    type: 'integer',
+    enum: [2, 3, 5, 7, '11', 'dog']
+  })
+  c('2', 2)
+  c(7.9, 7)
+  c(3.1, 3)
+  c(+5, 5)
+  c('11', '', 'It must be one of the possible options!')
+  c(11, '', 'Deve ser uma das opções possíveis!', true)
+  c('dog', null)
+
+  var c = x({
+    type: 'number',
+    enum: [2, 3, 5, 7, '11', 'dog']
+  })
+  c('2', 2)
+  c(7.9, '', 'It must be one of the possible options!')
+  c('7.9', '', 'Deve ser uma das opções possíveis!', true)
+  c('3.1', 3, 'It must be one of the possible options!')
+  c(3.1, 3, 'Deve ser uma das opções possíveis!', true)
+  c(+5, 5)
+  c(11, '', 'It must be one of the possible options!')
+  c('11', '', 'Deve ser uma das opções possíveis!', true)
+  c('dog', null)
+
+  var c = x({
+    type: 'string',
+    enum: [2, 3, 5, 7, '11', 'dog']
+  })
+  c('2', '', 'It must be one of the possible options!')
+  c(2, '', 'Deve ser uma das opções possíveis!', true)
+  c(7.9, '', 'It must be one of the possible options!')
+  c('7.9', '', 'Deve ser uma das opções possíveis!', true)
+  c('3.1', '', 'It must be one of the possible options!')
+  c(3.1, '', 'Deve ser uma das opções possíveis!', true)
+  c(+5, '', 'It must be one of the possible options!')
+  c('+5', '', 'Deve ser uma das opções possíveis!', true)
+  c(11, '11')
+  c('dog', 'dog')
+})
+
 QUnit.test("mix", assert => {
   const x = check(assert)
   var c = x({
@@ -596,7 +640,8 @@ QUnit.test("mix", assert => {
   c({
     foo: 15,
     bar: 13.5,
-    baz: 'cccarr'
+    baz: 'cccarr',
+    qux: 'xxx'
   }, {
     foo: 15,
     bar: 13.5,

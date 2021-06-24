@@ -6,7 +6,8 @@ export default {
     multipleOf: s => `Must be multiple of: ${s}`,
     minLength: s => `Must have at least ${s} character${s != 1 ? 's' : ''}`,
     maxLength: s => `Must have at most ${s} character${s != 1 ? 's' : ''}`,
-    pattern: s => `Must be of specified type!`
+    pattern: s => `Must be of specified type!`,
+    enum: s => `It must be one of the possible options!`
   },
   pt: {
     required: () => `É obrigatório!`,
@@ -15,6 +16,7 @@ export default {
     multipleOf: s => `Deve ser múltiplo de: ${s}`,
     minLength: s => `Deve ter no mínimo ${s} caractere${s != 1 ? 's' : ''}`,
     maxLength: s => `Deve ter no máximo ${s} caractere${s != 1 ? 's' : ''}`,
-    pattern: s => `Deve ser do tipo especificado!`
+    pattern: s => `Deve ser do tipo especificado!`,
+    enum: s => `Deve ser uma das opções possíveis!`
   }
 }
