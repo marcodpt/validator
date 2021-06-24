@@ -6,7 +6,7 @@ This module is a subset of json schema, focused on objects for form validation!
 It has support for multiple languages! And great error feedback!
 
 ## Usage
-```
+```js
 import {validator} from 'https://cdn.jsdelivr.net/gh/marcodpt/validator/index.js'
 
 const schema = {
