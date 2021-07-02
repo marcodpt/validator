@@ -8,7 +8,7 @@ export default {
     format: value => value.toLocaleString()
   },
   date: {
-    loader: value => new Date(value * 1000).toISOString(),
+    loader: value => new Date(value * 1000).toISOString().substr(0, 10),
     parser: value => value ? parseInt(
       (new Date(value).getTime() / 1000).toFixed(0)
     ) : null,

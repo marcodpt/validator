@@ -487,8 +487,8 @@ QUnit.test("date", assert => {
     minimum: 1619454783,
     maximum: 1623610905
   })
-  const a = new Date('2021-04-26T10:00:00.000Z').toLocaleDateString()
-  const b = new Date('2021-06-13T10:00:00.000Z').toLocaleDateString()
+  const a = new Date('2021-04-26').toLocaleDateString()
+  const b = new Date('2021-06-13').toLocaleDateString()
   c(0, null)
   c('', null)
   c('2021-04-08', '', 'Must be at least: '+a)
@@ -675,7 +675,7 @@ QUnit.test("loader", assert => {
     int: null,
     num: 3.14,
     str: "John",
-    dat: '2021-06-02T00:00:00.000Z'
+    dat: '2021-06-02'
   }))
 
   assert.equal(str(loader({
@@ -687,7 +687,7 @@ QUnit.test("loader", assert => {
   })), str({
     x: "X",
     int: 7,
-    dat: '2021-06-01T00:00:00.000Z',
+    dat: '2021-06-01',
     num: 3.14,
     str: "John"
   }))
@@ -701,7 +701,7 @@ QUnit.test("loader", assert => {
     dat: 1622505600
   })), str({
     int: 7,
-    dat: '2021-06-01T00:00:00.000Z',
+    dat: '2021-06-01',
     num: 3.14,
     str: "John"
   }))
@@ -719,7 +719,7 @@ QUnit.test("loader", assert => {
     int: "15",
     num: "17.5",
     str: "Hello",
-    dat: '2021-06-01T00:00:00.000Z'
+    dat: '2021-06-01'
   }))
 
   assert.equal(str(loader({
@@ -736,6 +736,6 @@ QUnit.test("loader", assert => {
     int: "15",
     num: "17.5",
     str: "Hello",
-    dat: '2021-06-01T00:00:00.000Z'
+    dat: '2021-06-01'
   }))
 })
