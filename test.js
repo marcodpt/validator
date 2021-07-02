@@ -1,4 +1,4 @@
-import {validate, validate_pt} from './index.js'
+import {loader, validate, validate_pt} from './index.js'
 
 const str = X => JSON.stringify(X, undefined, 2)
 const genSchema = S => ({
@@ -647,4 +647,95 @@ QUnit.test("mix", assert => {
     bar: 13.5,
     baz: 'cccarr'
   })
+})
+
+QUnit.test("loader", assert => {
+  const P = {
+    int: {
+      type: "integer"
+    },
+    num: {
+      type: "number",
+      default: 3.14
+    },
+    str: {
+      type: "string",
+      default: "John"
+    },
+    dat: {
+      type: "integer",
+      format: "date",
+      default: 1622592000
+    }
+  }
+
+  assert.equal(str(loader({
+    properties: P
+  })), str({
+    int: null,
+    num: 3.14,
+    str: "John",
+    dat: '2021-06-02T00:00:00.000Z'
+  }))
+
+  assert.equal(str(loader({
+    properties: P
+  }, {
+    x: "X",
+    int: 7,
+    dat: 1622505600
+  })), str({
+    x: "X",
+    int: 7,
+    dat: '2021-06-01T00:00:00.000Z',
+    num: 3.14,
+    str: "John"
+  }))
+
+  assert.equal(str(loader({
+    properties: P,
+    additionalProperties: false
+  }, {
+    x: "X",
+    int: 7,
+    dat: 1622505600
+  })), str({
+    int: 7,
+    dat: '2021-06-01T00:00:00.000Z',
+    num: 3.14,
+    str: "John"
+  }))
+
+  assert.equal(str(loader({
+    properties: P,
+    additionalProperties: false
+  }, {
+    x: "X",
+    int: "15",
+    num: "17.5",
+    str: "Hello",
+    dat: 1622505600
+  })), str({
+    int: "15",
+    num: "17.5",
+    str: "Hello",
+    dat: '2021-06-01T00:00:00.000Z'
+  }))
+
+  assert.equal(str(loader({
+    properties: P,
+    additionalProperties: true
+  }, {
+    x: "X",
+    int: "15",
+    num: "17.5",
+    str: "Hello",
+    dat: 1622505600
+  })), str({
+    x: "X",
+    int: "15",
+    num: "17.5",
+    str: "Hello",
+    dat: '2021-06-01T00:00:00.000Z'
+  }))
 })

@@ -2,7 +2,7 @@ import format from './format.js'
 import lang from './lang.js'
 import assert from './assert.js'
 
-const validate = lng => (schema, data, onError) => {
+const val = lng => (schema, data, onError) => {
   const L = lang[lng] || lang.en
 
   const identity = X => X
@@ -38,10 +38,33 @@ const validate = lng => (schema, data, onError) => {
   return valid ? R : null
 }
 
-const v = validate()
-const v_pt = validate('pt')
+const loader = (schema, data) => {
+  data = data || {}
+  const P = schema.properties || {}
+  Object.keys(P).forEach(key => {
+    const Q = P[key]
+    const f = format[Q.format || Q.type]
+    if (data[key] == null) {
+      data[key] = Q.default != null ? Q.default : null
+    }
+    data[key] = data[key] != null && f && f.loader ?
+      f.loader(data[key]) : data[key]
+  })
+  if (schema.additionalProperties === false) {
+    Object.keys(data).forEach(key => {
+      if (P[key] == null) {
+        delete data[key]
+      }
+    })
+  }
+  return data
+}
+
+const validate = val()
+const validate_pt = val('pt')
 
 export {
-  v as validate,
-  v_pt as validate_pt
+  loader,
+  validate,
+  validate_pt
 }

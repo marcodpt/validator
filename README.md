@@ -68,6 +68,7 @@ console.log(res)
 ```
 
 ## API
+
 The current available translations are:
  - `validate`: english
  - `validate_pt`: portuguese (português)
@@ -82,6 +83,13 @@ the current implementation only support objects.
  - returns:
    - object: In case validation pass with modified `data` that passed validation 
    - null: In case that the `data` do not pass validation
+
+### loader (schema, data)
+ - object `schema`: A json schema of the data, it must be an object because
+the current implementation only support objects.
+ - object `data`: Your data model
+ - returns:
+   An object to be used on your inputs with loaded data based on `format` info
 
 ## Tests
 Check if work in your [broser](https://marcodpt.github.io/validator/)
