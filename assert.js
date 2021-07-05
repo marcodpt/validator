@@ -14,5 +14,9 @@ export default {
   pattern: (fixed, value) =>
     typeof value != 'string' ||
     new RegExp(fixed).test(value),
-  enum: (fixed, value) => fixed.indexOf(value) != -1
+  enum: (fixed, value) => fixed.indexOf(value) != -1,
+  minItems: (fixed, value) => !(value instanceof Array) ||
+    value.length >= fixed,
+  maxItems: (fixed, value) => !(value instanceof Array) ||
+    value.length <= fixed
 }

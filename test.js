@@ -90,6 +90,31 @@ QUnit.test("number", assert => {
   c('dog', null)
 })
 
+QUnit.test("array", assert => {
+  const x = check(assert)
+  var c = x({
+    type: 'array'
+  })
+  c(undefined, null)
+  c(null, null)
+  c({}, null)
+  c([], [])
+  c(['a', 'b', 'c'], ['a', 'b', 'c'])
+  c([1, 2, 3], [1, 2, 3])
+  c(true, null)
+  c(false, null)
+  c(0, null)
+  c(0.00, null)
+  c(+5, null)
+  c(-5, null)
+  c(3.14, null)
+  c(-2.7, null)
+  c('', null)
+  c('14.54f', null)
+  c('14.54 f', null)
+  c('dog', null)
+})
+
 QUnit.test("required", assert => {
   const x = check(assert)
   var c = x({

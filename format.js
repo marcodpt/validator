@@ -19,5 +19,9 @@ export default {
   number: {
     parser: value => isNaN(value) ? null : parseFloat(value),
     format: value => value.toLocaleString()
+  },
+  array: {
+    parser: value => value instanceof Array ? value : null,
+    format: value => JSON.stringify(value, undefined, 2)
   }
 }
