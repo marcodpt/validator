@@ -2,6 +2,8 @@ import format from './format.js'
 import lang from './lang.js'
 import assert from './assert.js'
 
+const getF = P => format[P.format] || format[P.type] || format.string
+
 const val = lng => (schema, data, onError) => {
   const L = lang[lng] || lang.en
 
@@ -10,8 +12,7 @@ const val = lng => (schema, data, onError) => {
 
   var valid = true
   const R = Object.keys(P).reduce((R, p) => {
-    const f = P[p].format || P[p].type
-    const F = format[f] || format.string
+    const F = getF(P[p])
     const parser = F.parser || identity
     const formatter = F.format || identity
     const loader = F.loader || identity
@@ -43,12 +44,12 @@ const loader = (schema, data) => {
   const P = schema.properties || {}
   Object.keys(P).forEach(key => {
     const Q = P[key]
-    const f = format[Q.format || Q.type]
+    const F = getF(Q)
     if (data[key] == null) {
       data[key] = Q.default != null ? Q.default : null
     }
-    data[key] = data[key] != null && f && f.loader ?
-      f.loader(data[key]) : data[key]
+    data[key] = data[key] != null && F.loader ?
+      F.loader(data[key]) : data[key]
   })
   if (schema.additionalProperties === false) {
     Object.keys(data).forEach(key => {
