@@ -8,11 +8,13 @@ export default {
     format: value => value.toLocaleString()
   },
   date: {
-    loader: value => new Date(value * 1000).toISOString().substr(0, 10),
+    loader: value => isNaN(value) ? value :
+      !parseInt(value) ? '' :
+        new Date(value * 1000).toISOString().substr(0, 10),
     parser: value => value ? parseInt(
       (new Date(value).getTime() / 1000).toFixed(0)
     ) : null,
-    format: (value, type) => type == 'multipleOf' ?
+    format: (value, type) => !value ? value : type == 'multipleOf' ?
       value.toLocaleString() :
       new Date(value).toLocaleDateString()
   },
